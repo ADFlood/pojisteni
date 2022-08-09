@@ -15,6 +15,7 @@ namespace pojisteni
                 return Prijmeni + " " + Jmeno;
             } }
         public string Telefon { get; private set; }
+        public int Vek { get; private set; }
         private string id = "";
         public string Id
         {
@@ -37,6 +38,7 @@ namespace pojisteni
         public static string[] EditovatelneVlastnosti { get {
                 return new string[] { "Jmeno", "Jméno",
                                       "Prijmeni", "Příjmení",
+                                      "Vek", "Věk",
                                       "Telefon", "Telefon" };
             }}
         public static string[] ZakladniVlastnosti
@@ -44,14 +46,16 @@ namespace pojisteni
             get
             {
                 return new string[] { "Jmeno", "Jméno",
-                                      "Prijmeni", "Příjmení"};
+                                      "Prijmeni", "Příjmení",
+                                      "Vek", "Věk"};
             }
         }
-        public Pojistenec(int counter, string jmeno, string prijmeni, string telefon)
+        public Pojistenec(int counter, string jmeno, string prijmeni, int vek, string telefon)
         {
             Id = tag + counter.ToString().PadLeft(3, '0');
             Jmeno = jmeno;
             Prijmeni = prijmeni;
+            Vek = vek;
             Telefon = telefon;
         }
         public override string ToString()

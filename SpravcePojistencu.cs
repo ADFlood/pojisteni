@@ -30,10 +30,11 @@ namespace pojisteni
 
         public override bool Pridej(string[] hodnoty, bool novyZaznam = true)
         {
-            int spravnaDelka = 4;
+            int spravnaDelka = 5;
             int counterZaznam = 0;
             string jmeno = "";
             string prijmeni = "";
+            int vek = 0;
             string telefon = "";
 
             // Kontrola úplnosti a správnosti zadaných hodnot
@@ -58,13 +59,16 @@ namespace pojisteni
                 // Prijmeni
                 prijmeni = hodnoty[2];
 
+                // Věk
+                vek = int.Parse(hodnoty[3]);
+
                 // Telefon
-                telefon = hodnoty[3];
+                telefon = hodnoty[4];
             }
 
             if (spravneHodnoty)
             {
-                Pojistenec pojistenec = new Pojistenec(counterZaznam, jmeno, prijmeni, telefon);
+                Pojistenec pojistenec = new Pojistenec(counterZaznam, jmeno, prijmeni, vek, telefon);
                 databaze.Add(pojistenec);
                 counter++;
                 Zprava = String.Format("Nový pojištěnec \"{0}\" byl úspěšně přidán.", pojistenec);
@@ -76,14 +80,6 @@ namespace pojisteni
 
             return spravneHodnoty;
         }
-        //public override bool Smaz(string id)
-        //{
-        //    T zaznam = VratZaznamDleId(id);
-        //    bool smazano = databaze.Remove(zaznam);
-        //    if (!smazano)
-        //        Zprava = "Záznam se nepodařilo smazat.";
-        //    return smazano;
-        //}
 
 
         public override string[] VratEditovatelneVlasnosti()
@@ -103,6 +99,7 @@ namespace pojisteni
                 radka.Add(p.Id);
                 radka.Add(p.Jmeno);
                 radka.Add(p.Prijmeni);
+                radka.Add(p.Vek.ToString());
                 radka.Add(p.Telefon);
                 string spojenaRadka = String.Join(";", radka.ToArray());
                 radky.Add(spojenaRadka);
