@@ -20,11 +20,12 @@ namespace pojisteni
         }
         public override string[] UpravHodnoty(string[] hodnoty, string[] doplnkoveHodnoty)
         {
-            string[] uplneHodnoty = new string[4];
+            string[] uplneHodnoty = new string[5];
             // index 0 = id
             uplneHodnoty[1] = hodnoty[0]; // Jmeno
             uplneHodnoty[2] = hodnoty[1]; // Prijmeni
-            uplneHodnoty[3] = ""; // nepovinná položka telefon
+            uplneHodnoty[3] = hodnoty[2]; // Větk
+            uplneHodnoty[4] = ""; // nepovinná položka telefon
             return uplneHodnoty;
         }
 

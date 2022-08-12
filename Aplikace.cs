@@ -403,7 +403,7 @@ namespace pojisteni
                 {
                     bool vytvoreno = PridejNovyZaznam(spravce, new string[] {""});
                     if (vytvoreno)
-                        klavesa = KartaPojistence(spravce.VratIdPoslednihoZaznamu());
+                        KartaPojistence(spravce.VratIdPoslednihoZaznamu());
                 }
                     
                 else if (klavesa == 'P')
@@ -516,7 +516,7 @@ namespace pojisteni
                 {
                     bool vytvoreno = PridejNovyZaznam(spravceSmluv, new string[] {idPojistence});
                     if (vytvoreno)
-                        klavesa = KartaSmlouvy(spravceSmluv.VratIdPoslednihoZaznamu());
+                        KartaSmlouvy(spravceSmluv.VratIdPoslednihoZaznamu());
                 }
                 else if (klavesa == 'S')
                 {
@@ -617,7 +617,7 @@ namespace pojisteni
                 {
                     bool vytvoreno = PridejNovyZaznam(spravceUdalosti, new string[] { idPojistence, id });
                     if (vytvoreno)
-                        klavesa = KartaUdalosti(spravceUdalosti.VratIdPoslednihoZaznamu());
+                        KartaUdalosti(spravceUdalosti.VratIdPoslednihoZaznamu());
                 }
                 else if (klavesa == 'U')
                 {
@@ -809,7 +809,7 @@ namespace pojisteni
                 VypisSloupecPodokna(y1, x2, sirkaSloupce2, BarvyReversEditSlabe, hodnotyOperatoru);
                 VypisSloupecPodokna(y1, x3, sirkaSloupce3, BarvyReversEditSlabe, hodnotyFiltru);
 
-                VypisText(y + vyska - 2, x1, BarvyReversSlabe, "(možné operátory: >, >=, <=, <, =, !=, %, !%)");
+                VypisText(y + vyska - 2, x1, BarvyReversSlabe, "(operátory: >, >=, <=, <, =, !=, %, !%)");
 
                 // Dotaz na volbu, kterou vlastnost chce uživatel editovat
                 volba = VyzadejHodnotuVRozmezi(y + nastaveni.odsazeni, x + nastaveni.odsazeni + text1.Length, BarvyRevers, 1, nazvyPoli.Length);
@@ -882,13 +882,6 @@ namespace pojisteni
             int automatickaVolba = 1;
             string[] noveHodnoty = new string[vlastnosti.Length / 2];
 
-            // Nastavení podokna
-            int x = 0;
-            int y = 0;
-            int sirka = 40;
-            int vyska = vlastnosti.Length / 2 + 6;
-            int maxSirkaSloupec1 = nastaveni.xSloupec2 - nastaveni.xSloupec1;
-            int maxSirkaSloupec2 = sirka - nastaveni.xSloupec2;
             string nadpis = "EDITACE ZÁZNAMU";
             if (novyZaznam)
                 nadpis = "PŘIDAT NOVÝ ZÁZNAM";
@@ -903,6 +896,19 @@ namespace pojisteni
             // Sestavení polí se statickými texty jednotlivých sloupců
             string[] nazvyPoli = VratKazdouXtouPolozkuZpole(vlastnosti, 2, 1);
 
+            // Definice šířky okna a sloupců
+            int maxSirkaSloupec1 = 0;
+            foreach (string s in nazvyPoli)
+                maxSirkaSloupec1 = Math.Max(maxSirkaSloupec1, s.Length);
+            maxSirkaSloupec1 += 3; // kvůli číslování
+            int maxSirkaSloupec2 = 35;
+            int sirka = nastaveni.odsazeni * 3 + maxSirkaSloupec1 + maxSirkaSloupec2;
+            int vyska = vlastnosti.Length / 2 + 6;
+
+            // Definice šířky okna a sloupců
+            int x = 0;
+            int y = 0;
+
             int volba = -1;
             while (volba != int.MaxValue)
             {
@@ -912,8 +918,15 @@ namespace pojisteni
                     y = souradnice.yy;
                     x = souradnice.xx;
                 }
+                int xSloupec1 = x + nastaveni.odsazeni;
+                int xSloupec2 = xSloupec1 + maxSirkaSloupec1 + nastaveni.odsazeni;
 
-                VypisSloupecPodokna(y + 4, x + nastaveni.xSloupec1, maxSirkaSloupec1, BarvyRevers, nazvyPoli, true);
+                if (!novyZaznam || (novyZaznam && automatickaVolba == 1))
+                {
+                    VypisSloupecPodokna(y + 4, xSloupec1, maxSirkaSloupec1, BarvyRevers, nazvyPoli, true);
+                    string[] prazdnaPole = VytvorPoleStringuZadaneDelky(vlastnosti.Length / 2, maxSirkaSloupec2);
+                    VypisSloupecPodokna(y + 4, xSloupec2, maxSirkaSloupec2, BarvyReversEditSlabe, prazdnaPole);
+                }
 
                 if (!novyZaznam)
                 // Sestavení polí s proměnnými texty jednotlivých sloupců
@@ -923,7 +936,7 @@ namespace pojisteni
                     for (int i = 0; i < vlastnosti.Length; i += 2)
                         seznam.Add(spravce.VyhledejHodnotuDleIdZaznamu(id, vlastnosti[i]));
                     string[] hodnotyPoli = seznam.ToArray();
-                    VypisSloupecPodokna(y + 4, x + nastaveni.xSloupec2, maxSirkaSloupec2, BarvyReversSlabe, hodnotyPoli);
+                    VypisSloupecPodokna(y + 4, xSloupec2, maxSirkaSloupec2, BarvyReversSlabe, hodnotyPoli);
                 }
 
                 // Dotaz na volbu, kterou vlastnost chce uživatel editovat
@@ -935,8 +948,8 @@ namespace pojisteni
                 // Editace správně zvolené vlastnosti
                 if (volba != int.MaxValue)
                 {
-                    OznacVybranouPolozku(volba, nazvyPoli, y + 4 + volba - 1, x + nastaveni.xSloupec1);
-                    string novaHodnota = EditujVybranouPolozku(volba, y + 4 + volba - 1, x + nastaveni.xSloupec2);
+                    OznacVybranouPolozku(volba, nazvyPoli, y + 4 + volba - 1, xSloupec1);
+                    string novaHodnota = EditujVybranouPolozku(volba, y + 4 + volba - 1, xSloupec2);
 
                     // Zaslání správci, aby ověřil správný datový typ a případně hodnotu do vlastnosti dosadil
                     if (novyZaznam)
@@ -962,6 +975,15 @@ namespace pojisteni
 
             BarvyStandard();
             return noveHodnoty;
+        }
+
+        private string[] VytvorPoleStringuZadaneDelky(int pocet, int delka)
+        {
+            string[] pole = new string[pocet];
+            string rezezec = VytvorRetezecZnaku(' ', delka);
+            for (int i = 0; i < pole.Length; i++)
+                pole[i] = rezezec;
+            return pole;
         }
         private bool VymazZaznam<T>(Spravce<T> spravce, string id)
         {

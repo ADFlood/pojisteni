@@ -13,10 +13,6 @@ namespace pojisteni
         public readonly int radekZahlavi = 0;
         public readonly int radekPrikazy = 2;
 
-        public readonly int maxDelkaSmluv = 5;
-        public readonly int maxDelkaUdalosti = 10;
-
-
         public readonly int odsazeni = 2;
         public readonly int odsazeniOknaOznameniOdSpodniHrany = 3;
 
@@ -38,7 +34,8 @@ namespace pojisteni
         public readonly string[] parametryPrehleduPojistencu = new string[]
         {
             "ID", "8", "Id", "", "",
-            "Pojištěnec", "50", "CeleJmeno", "", ""
+            "Příjmení", "20", "Prijmeni", "", "",
+            "Jméno", "20", "Jmeno", "", ""
         };
         public readonly string[] parametryPrehleduSmluv = new string[]
         {
